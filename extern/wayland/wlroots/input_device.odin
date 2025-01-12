@@ -10,7 +10,7 @@ InputDevice :: struct {
 	},
 	data:   rawptr,
 }
-InputDeviceType :: enum {
+InputDeviceType :: enum c.int {
 	Keyboard,
 	Pointer,
 	Touch,

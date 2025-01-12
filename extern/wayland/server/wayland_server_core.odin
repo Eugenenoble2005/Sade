@@ -50,7 +50,7 @@ Listener :: struct {
 	notify: proc(_: ^Listener, _: rawptr),
 }
 EventSource :: struct {}
-OutputSubpixel :: enum {
+OutputSubpixel :: enum c.int {
 	Unknown,
 	None,
 	HorizontalRGB,
@@ -58,7 +58,7 @@ OutputSubpixel :: enum {
 	VerticalRGB,
 	VerticalBGR,
 }
-OutputTransform :: enum {
+OutputTransform :: enum c.int {
 	Normal,
 	t90,
 	t180,
@@ -68,25 +68,25 @@ OutputTransform :: enum {
 	Flipped_180,
 	Flipped_270,
 }
-DataDeviceManagerDndAction :: enum {
+DataDeviceManagerDndAction :: enum c.int {
 	None,
 	Copy,
 	Move,
 	Ask,
 }
-PointerAxisRelativeDirection :: enum {
+PointerAxisRelativeDirection :: enum c.int {
 	Identical,
 	Inverted,
 }
-PointerButtonState :: enum {
+PointerButtonState :: enum c.int {
 	Released,
 	Pressed,
 }
-PointerAxis :: enum {
+PointerAxis :: enum c.int {
 	VerticalScroll,
 	HorizontalScroll,
 }
-PointerAxisSource :: enum {
+PointerAxisSource :: enum c.int {
 	Wheel,
 	Finger,
 	Continuous,
@@ -120,6 +120,12 @@ foreign wayland {
 
 	@(link_name = "wl_list_empty")
 	IsListEmpty :: proc(_: ^List) -> c.int ---
+
+	@(link_name = "wl_list_remove")
+	ListRemove :: proc(_: ^List) ---
+
+	@(link_name = "wl_display_add_socket_auto")
+	AddDisplaySocketAuto :: proc(_: ^Display) -> cstring ---
 }
 
 AddSignal :: proc(signal: ^Signal, listener: ^Listener) {

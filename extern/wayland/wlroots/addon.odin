@@ -7,3 +7,13 @@ AddonSet :: struct {
 	},
 }
 
+Addon :: struct {
+	impl:        ^struct {
+		name:    cstring,
+		destroy: proc(addon: ^Addon),
+	}, //todo
+	WLR_PRIVATE: struct {
+		owner: rawptr,
+		link:  wl.List,
+	},
+}

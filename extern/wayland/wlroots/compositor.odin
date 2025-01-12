@@ -72,8 +72,8 @@ SurfaceState :: struct {
 	frame_callback_list:           wl.List,
 	width, height:                 c.int,
 	buffer_width, buffer_height:   c.int,
-	subsurface_below:              wl.List,
-	subsurface_above:              wl.List,
+	subsurfaces_below:             wl.List,
+	subsurfaces_above:             wl.List,
 	viewport:                      struct {
 		has_src, has_dst:      c.bool,
 		src:                   FBox,
@@ -96,4 +96,3 @@ foreign wlroots {
 	@(link_name = "wlr_compositor_create")
 	CreateCompositor :: proc(_: ^wl.Display, _: c.uint32_t, _: ^Renderer) -> ^Compositor ---
 }
-

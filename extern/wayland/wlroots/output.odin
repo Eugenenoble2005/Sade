@@ -5,7 +5,7 @@ import "core:c"
 when ODIN_OS == .Linux do foreign import wlroots "system:libwlroots-0.19.so"
 
 Output :: struct {
-	impl:                    ^struct {},
+	impl:                    ^OutputImpl,
 	backend:                 ^Backend,
 	event_loop:              ^wl.EventLoop,
 	global:                  ^wl.Global,
@@ -112,21 +112,43 @@ OutputCursor :: struct {
 		renderer_destroy: wl.Listener,
 	},
 }
-
-OutputStateModeType :: enum {
+OutputImpl :: struct {
+	set_cursor:         proc(
+		output: ^Output,
+		buffer: ^Buffer,
+		hotspot_x: c.int,
+		hotspot_y: c.int,
+	) -> c.bool,
+	move_cursor:        proc(output: ^Output, x: c.int, y: c.int) -> c.bool,
+	destroy:            proc(output: ^Output),
+	test:               proc(output: ^Output, state: ^OutputState) -> c.bool,
+	commit:             proc(output: ^Output, state: ^OutputState) -> c.bool,
+	get_gamma_size:     proc(output: ^Output) -> c.size_t,
+	get_cursor_formats: proc(output: ^Output, buffer_caps: c.uint32_t) -> DRMFormatSet,
+	get_cursor_sizes:   proc(output: ^Output, len: c.size_t) -> OutputCursorSize,
+	get_primary_format: proc(output: ^Output, buffer_caps: c.uint32_t) -> DRMFormatSet,
+}
+OutputCursorSize :: struct {
+	width, height: c.int,
+}
+OutputStateModeType :: enum c.int {
 	Fixed,
 	Custom,
 }
-OutputModeAspectRatio :: enum {
+OutputModeAspectRatio :: enum c.int {
 	None,
 	r4_3,
 	r16_9,
 	r64_27,
 	r256_135,
 }
-OutputAdaptiveSyncStatus :: enum {
+OutputAdaptiveSyncStatus :: enum c.int {
 	Disabled,
 	Enabled,
+}
+OutputEventRequestState :: struct {
+	output: ^Output,
+	state:  ^OutputState,
 }
 foreign wlroots {
 	@(link_name = "wlr_output_state_init")
@@ -152,4 +174,3 @@ foreign wlroots {
 
 
 }
-

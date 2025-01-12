@@ -8,3 +8,8 @@ DRMFormat :: struct {
 	modifiers: ^c.uint64_t,
 }
 
+DRMFormatSet :: struct {
+	len:      c.size_t,
+	capacity: c.size_t,
+	formats:  ^DRMFormat,
+}

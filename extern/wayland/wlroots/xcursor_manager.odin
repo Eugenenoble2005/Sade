@@ -11,5 +11,7 @@ XCursorManager :: struct {
 foreign wlroots {
 	@(link_name = "wlr_xcursor_manager_create")
 	CreateXCursorManager :: proc(_: cstring, size: c.uint32_t) -> ^XCursorManager ---
-}
 
+	@(link_name = "wlr_xcursor_manager_destroy")
+	DestroyXCursorManager :: proc(_: ^XCursorManager) ---
+}

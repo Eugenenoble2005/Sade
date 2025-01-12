@@ -53,7 +53,7 @@ Drag :: struct {
 		icon_destroy:        wl.Listener,
 	},
 }
-GrabType :: enum {
+GrabType :: enum c.int {
 	Keyboard,
 	Keyboard_Pointer,
 	Keyboard_Touch,

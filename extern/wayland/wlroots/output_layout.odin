@@ -14,6 +14,20 @@ OutputLayout :: struct {
 	data:            rawptr,
 	display_destroy: wl.Listener,
 }
+OutputLayoutOutput :: struct {
+	layout:          ^OutputLayout,
+	output:          ^Output,
+	x, y:            c.int,
+	link:            wl.List,
+	auto_configured: c.bool,
+	events:          struct {
+		destroy: wl.Signal,
+	},
+	WLR_PRIVATE:     struct {
+		addon:  Addon,
+		commit: wl.Listener,
+	},
+}
 foreign wlroots {
 	@(link_name = "wlr_output_layout_create")
 	CreateOutputLayout :: proc(_: ^wl.Display) -> ^OutputLayout ---
@@ -22,5 +36,5 @@ foreign wlroots {
 	DestroyOutputLayout :: proc(_: ^OutputLayout) ---
 
 	@(link_name = "wlr_output_layout_add_auto")
-	AddOutputLayoutAuto :: proc(_: ^OutputLayout, _: ^Output) -> rawptr ---
+	AddOutputLayoutAuto :: proc(_: ^OutputLayout, _: ^Output) -> ^OutputLayoutOutput ---
 }

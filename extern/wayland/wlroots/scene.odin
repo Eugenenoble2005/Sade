@@ -2,6 +2,7 @@ package wlroots
 import "../../pixman"
 import wl "../server"
 import "core:c"
+import "core:sys/posix"
 when ODIN_OS == .Linux do foreign import wlroots "system:libwlroots-0.19.so"
 
 Scene :: struct {
@@ -42,33 +43,49 @@ SceneOutputLayout :: struct {
 	scene_destroy:  wl.Listener,
 }
 
-SceneNodeType :: enum {
+SceneNodeType :: enum c.int {
 	Tree,
 	Rect,
 	Buffer,
 }
-SceneDebugDamageOption :: enum {
+SceneDebugDamageOption :: enum c.int {
 	None,
 	Renderer,
 	Highlight,
 }
-// SceneOutput :: struct {
-// 	output: ^Output,
-// 	link: wl.List,
-// 	scene: ^Scene,
-// 	addon: Addon,
-// 	damage_ring: DamageRing,
-// 	x,y: c.int,
-// 	events: struct {
-// 		destroy: wl.Signal
-// 	},
-// 	WLR_PRIVATE: struct {
-// 		pending_commit_damage:pixman.Region32,
-// 		index: c.uint8_t,
-// 		prev_scanout: c.bool,
-// 		g
-// 	}
-// }
+SceneOutput :: struct {
+	output:                    ^Output,
+	link:                      wl.List,
+	scene:                     ^Scene,
+	addon:                     Addon,
+	damage_ring:               DamageRing,
+	x, y:                      c.int,
+	events:                    struct {
+		destroy: wl.Signal,
+	},
+	WLR_PRIVATE:               struct {},
+	pending_commit_damage:     pixman.Region32,
+	index:                     c.uint8_t,
+	prev_scanout:              c.bool,
+	gamma_lut_changed:         c.bool,
+	gamma_lut:                 ^GammaControlV1,
+	output_commit:             wl.Listener,
+	output_damage:             wl.Listener,
+	output_needs_frame:        wl.Listener,
+	damager_highlight_regions: wl.List,
+	render_list:               wl.Array,
+	in_timeline:               ^DRMSyncObjTimeline,
+	in_point:                  c.uint64_t,
+}
+SceneOutputStateOptions :: struct {
+	timer:           ^SceneTimer,
+	color_transform: ^ColorTransform,
+	swapchain:       ^Swapchain,
+}
+SceneTimer :: struct {
+	pre_render_duration: c.int64_t,
+	render_timer:        ^RenderTimer,
+}
 foreign wlroots {
 	@(link_name = "wlr_scene_create")
 	CreateScene :: proc() -> ^Scene ---
@@ -79,6 +96,18 @@ foreign wlroots {
 	@(link_name = "wlr_scene_node_set_position")
 	SetSceneNodePosition :: proc(_: ^SceneNode, _: c.int, _: c.int) ---
 
-	// @(link_name = "wlr_scene_get_scene_output")
-	// GetSceneOutput :: proc(_: ^Scene, _: Output) -> ^SceneOutput ---
+	@(link_name = "wlr_scene_get_scene_output")
+	GetSceneOutput :: proc(_: ^Scene, _: ^Output) -> ^SceneOutput ---
+
+	@(link_name = "wlr_scene_output_create")
+	CreateOutputScene :: proc(_: ^Scene, _: ^Output) -> ^SceneOutput ---
+
+	@(link_name = "wlr_scene_output_layout_add_output")
+	AddSceneOutputLayoutToOutput :: proc(_: ^SceneOutputLayout, _: ^OutputLayoutOutput, _: ^SceneOutput) ---
+
+	@(link_name = "wlr_scene_output_commit")
+	CommitOutputScene :: proc(_: ^SceneOutput, _: ^SceneOutputStateOptions) -> c.bool ---
+
+	@(link_name = "wlr_scene_output_send_frame_done")
+	SendOutputFrameDone :: proc(_: ^SceneOutput, _: ^posix.timespec) ---
 }
