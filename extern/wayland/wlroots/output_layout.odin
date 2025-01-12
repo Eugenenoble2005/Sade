@@ -20,5 +20,7 @@ foreign wlroots {
 
 	@(link_name = "wlr_output_layout_destroy")
 	DestroyOutputLayout :: proc(_: ^OutputLayout) ---
-}
 
+	@(link_name = "wlr_output_layout_add_auto")
+	AddOutputLayoutAuto :: proc(_: ^OutputLayout, _: ^Output) -> rawptr ---
+}

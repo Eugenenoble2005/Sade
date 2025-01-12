@@ -117,9 +117,11 @@ foreign wayland {
 
 	@(link_name = "wl_list_insert")
 	ListInsert :: proc(_: ^List, _: ^List) ---
+
+	@(link_name = "wl_list_empty")
+	IsListEmpty :: proc(_: ^List) -> c.int ---
 }
 
 AddSignal :: proc(signal: ^Signal, listener: ^Listener) {
 	ListInsert(signal.listener_list.prev, &listener.link)
 }
-

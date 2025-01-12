@@ -227,5 +227,9 @@ SeatPointerButton :: struct {
 	n_pressed: c.size_t,
 }
 foreign wlroots {
+	@(link_name = "wlr_seat_set_capabilities")
+	SetSeatCapabilities :: proc(_: ^Seat, _: c.uint32_t) ---
 
+	@(link_name = "wlr_seat_create")
+	CreateSeat :: proc(_: ^wl.Display, _: cstring) -> ^Seat ---
 }

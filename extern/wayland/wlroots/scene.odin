@@ -52,7 +52,23 @@ SceneDebugDamageOption :: enum {
 	Renderer,
 	Highlight,
 }
-
+// SceneOutput :: struct {
+// 	output: ^Output,
+// 	link: wl.List,
+// 	scene: ^Scene,
+// 	addon: Addon,
+// 	damage_ring: DamageRing,
+// 	x,y: c.int,
+// 	events: struct {
+// 		destroy: wl.Signal
+// 	},
+// 	WLR_PRIVATE: struct {
+// 		pending_commit_damage:pixman.Region32,
+// 		index: c.uint8_t,
+// 		prev_scanout: c.bool,
+// 		g
+// 	}
+// }
 foreign wlroots {
 	@(link_name = "wlr_scene_create")
 	CreateScene :: proc() -> ^Scene ---
@@ -60,5 +76,9 @@ foreign wlroots {
 	@(link_name = "wlr_scene_attach_output_layout")
 	AttachSceneToOutputLayout :: proc(_: ^Scene, _: ^OutputLayout) -> ^SceneOutputLayout ---
 
-}
+	@(link_name = "wlr_scene_node_set_position")
+	SetSceneNodePosition :: proc(_: ^SceneNode, _: c.int, _: c.int) ---
 
+	// @(link_name = "wlr_scene_get_scene_output")
+	// GetSceneOutput :: proc(_: ^Scene, _: Output) -> ^SceneOutput ---
+}

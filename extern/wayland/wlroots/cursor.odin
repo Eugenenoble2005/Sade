@@ -49,4 +49,7 @@ foreign wlroots {
 
 	@(link_name = "wlr_cursor_move")
 	MoveCursor :: proc(_: ^Cursor, _: ^InputDevice, _: c.double, _: c.double) ---
+
+	@(link_name = "wlr_cursor_set_xcursor")
+	SetXcursor :: proc(_: ^Cursor, _: ^XCursorManager, _: cstring) ---
 }
