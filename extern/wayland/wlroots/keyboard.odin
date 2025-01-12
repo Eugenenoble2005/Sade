@@ -2,6 +2,7 @@ package wlroots
 import xkb "../../xkbcommon"
 import wl "../server"
 import "core:c"
+when ODIN_OS == .Linux do foreign import wlroots "system:libwlroots-0.19.so"
 KeyboardModifiers :: struct {
 	depressed: xkb.ModMask,
 	latched:   xkb.ModMask,
@@ -48,4 +49,8 @@ KeyboardGroup :: struct {
 		leave: wl.Signal,
 	},
 	data:     rawptr,
+}
+foreign wlroots {
+	@(link_name = "wlr_keyboard_from_input_device")
+	GetKeyboardFromInputDevice :: proc(_: ^InputDevice) -> ^Keyboard ---
 }
