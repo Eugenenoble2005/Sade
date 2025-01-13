@@ -92,7 +92,10 @@ PointerAxisSource :: enum c.int {
 	Continuous,
 	Wheel_Tilt,
 }
-
+KeyboardKeyState :: enum c.int {
+	Released,
+	Pressed,
+}
 foreign wayland {
 	@(link_name = "wl_display_create")
 	CreateDisplay :: proc() -> ^Display ---

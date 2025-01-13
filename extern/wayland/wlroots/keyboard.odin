@@ -9,6 +9,16 @@ KeyboardModifiers :: struct {
 	locked:    xkb.ModMask,
 	group:     xkb.LayoutIndex,
 }
+KeyboardModifer :: enum c.int {
+	Shift = 1 << 0,
+	Caps  = 1 << 1,
+	Ctrl  = 1 << 2,
+	Alt   = 1 << 3,
+	Mod2  = 1 << 4,
+	Mod3  = 1 << 5,
+	Logo  = 1 << 6,
+	Mod5  = 1 << 7,
+}
 Keyboard :: struct {
 	base:          InputDevice,
 	//
@@ -50,7 +60,23 @@ KeyboardGroup :: struct {
 	},
 	data:     rawptr,
 }
+KeyboardKeyEvent :: struct {
+	time_msec:    c.uint32_t,
+	keycode:      c.uint32_t,
+	update_state: c.bool,
+	state:        wl.KeyboardKeyState,
+}
+
 foreign wlroots {
 	@(link_name = "wlr_keyboard_from_input_device")
 	GetKeyboardFromInputDevice :: proc(_: ^InputDevice) -> ^Keyboard ---
+
+	@(link_name = "wlr_keyboard_set_keymap")
+	SetKeyMap :: proc(_: ^Keyboard, _: ^xkb.Keymap) -> c.bool ---
+
+	@(link_name = "wlr_keyboard_set_repeat_info")
+	SetKeyboardRepeatInfo :: proc(_: ^Keyboard, _: c.int32_t, _: c.int32_t) ---
+
+	@(link_name = "wlr_keyboard_get_modifiers")
+	GetKeyboardModifiers :: proc(_: ^Keyboard) -> c.uint32_t ---
 }

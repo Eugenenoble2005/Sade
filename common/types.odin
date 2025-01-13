@@ -48,6 +48,14 @@ SadeOutput :: struct {
 	request_state: wl.Listener,
 	destroy:       wl.Listener,
 }
+SadeKeyboard :: struct {
+	link:      wl.List,
+	server:    ^SadeServer,
+	keyboard:  ^wlr.Keyboard,
+	modifiers: wl.Listener,
+	key:       wl.Listener,
+	destroy:   wl.Listener,
+}
 SadeCursorMode :: enum {
 	Passthrough,
 	Move,

@@ -8,6 +8,7 @@ import "core:sys/linux"
 import "core:sys/posix"
 SadeServer :: common.SadeServer
 SadeOutput :: common.SadeOutput
+SadeKeyboard :: common.SadeKeyboard
 Calloc :: common.Calloc
 
 handleNewOutput :: proc(listener: ^wl.Listener, data: rawptr) {
@@ -46,7 +47,6 @@ handleNewOutput :: proc(listener: ^wl.Listener, data: rawptr) {
 requestOutputState :: proc(listener: ^wl.Listener, data: rawptr) {
 	sade_output: ^SadeOutput = container_of(listener, SadeOutput, "request_state")
 	event := cast(^wlr.OutputEventRequestState)data
-	fmt.println("data is %d", event.output.needs_frame)
 	wlr.CommitOutputState(sade_output.wlr_output, event.state)
 }
 destroyOutput :: proc(listener: ^wl.Listener, data: rawptr) {

@@ -8,7 +8,7 @@ handleNewInput :: proc(listener: ^wl.Listener, data: rawptr) {
 
 	//attach pointer as input device
 	if INPUT_DEVICE.type == .Pointer do wlr.AttachCursorAsInputDevice(sade.cursor, INPUT_DEVICE)
-	if INPUT_DEVICE.type == .Keyboard do ServerNewKeyboard()
+	if INPUT_DEVICE.type == .Keyboard do ServerNewKeyboard(sade, INPUT_DEVICE)
 	//set pointer capabilites
 	caps: uint = 1
 	//set keyboard capabilites

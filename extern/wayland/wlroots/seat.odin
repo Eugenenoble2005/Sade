@@ -232,4 +232,10 @@ foreign wlroots {
 
 	@(link_name = "wlr_seat_create")
 	CreateSeat :: proc(_: ^wl.Display, _: cstring) -> ^Seat ---
+
+	@(link_name = "wlr_seat_set_keyboard")
+	SetSeatKeyboard :: proc(_: ^Seat, _: ^Keyboard) ---
+
+	@(link_name = "wlr_seat_keyboard_notify_modifiers")
+	SeatKeyboardNotifyModifiers :: proc(_: ^Seat, _: ^KeyboardModifiers) ---
 }

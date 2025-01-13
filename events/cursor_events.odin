@@ -22,6 +22,6 @@ cursorMotion :: proc(listener: ^wl.Listener, data: rawptr) {
 	}
 	//otherwise get toplevel and send cursor event
 	//currently just set a static xcursor theme since i have not implemented any toplevels yet
-	wlr.SetXcursor(sade.cursor, sade.cursor_mgr, auto_cast "Layan")
+	wlr.SetXcursor(sade.cursor, sade.cursor_mgr, auto_cast "default")
 
 }
