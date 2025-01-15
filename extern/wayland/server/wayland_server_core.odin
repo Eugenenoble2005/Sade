@@ -129,6 +129,9 @@ foreign wayland {
 
 	@(link_name = "wl_display_add_socket_auto")
 	AddDisplaySocketAuto :: proc(_: ^Display) -> cstring ---
+
+	@(link_name = "wl_display_terminate")
+	TerminateDisplay :: proc(_: ^Display) ---
 }
 
 AddSignal :: proc(signal: ^Signal, listener: ^Listener) {

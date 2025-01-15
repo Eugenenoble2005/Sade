@@ -13,6 +13,10 @@ Keymap :: struct {}
 State :: struct {}
 Context :: struct {}
 
+///hex keycodes
+KEY_F1 :: 0xffbe
+KEY_RETURN :: 0xff0d
+
 ContextFlags :: enum c.int {
 	No_Flags,
 	No_Default_Includes,

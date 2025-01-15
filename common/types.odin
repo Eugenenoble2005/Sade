@@ -30,12 +30,13 @@ SadeServer :: struct {
 SadeToplevel :: struct {
 	link:               wl.List,
 	server:             ^SadeServer,
+	toplevel:           ^wlr.XdgToplevel,
 	scene_tree:         ^wlr.SceneTree,
 	map_:               wl.Listener,
 	unmap_:             wl.Listener,
 	commit:             wl.Listener,
 	destroy:            wl.Listener,
-	request_mode:       wl.Listener,
+	request_move:       wl.Listener,
 	request_resize:     wl.Listener,
 	request_maximize:   wl.Listener,
 	request_fullscreen: wl.Listener,
@@ -64,4 +65,7 @@ SadeCursorMode :: enum {
 Calloc :: proc($T: typeid) -> ^T {
 	//wlroots makes me do this
 	return cast(^T)libc.calloc(1, size_of(T))
+}
+CFree :: proc(pointer: rawptr) {
+	libc.free(pointer)
 }

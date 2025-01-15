@@ -31,7 +31,7 @@ Surface :: struct {
 	events:           struct {
 		client_commit:  wl.Signal,
 		commit:         wl.Signal,
-		map_field:      wl.Signal, /////todo
+		map_:           wl.Signal, /////todo
 		unmap:          wl.Signal,
 		new_subsurface: wl.Signal,
 		destroy:        wl.Signal,
@@ -88,9 +88,15 @@ SurfaceRole :: struct {
 	no_object:     c.bool,
 	client_commit: proc(surface: ^Surface),
 	commit:        proc(surface: ^Surface),
-	map_field:     proc(surface: ^Surface), ///must fix this
+	map_:          proc(surface: ^Surface), ///must fix this
 	unmap:         proc(surface: ^Surface),
 	destroy:       proc(surface: ^Surface),
+}
+SurfaceSynced :: struct {
+	surface: ^Surface,
+	impl:    ^struct {}, //TODO,
+	link:    wl.List,
+	index:   c.size_t,
 }
 foreign wlroots {
 	@(link_name = "wlr_compositor_create")

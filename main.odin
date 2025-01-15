@@ -3,7 +3,6 @@ import common "/common"
 import events "/events"
 import "core:c/libc"
 import "core:fmt"
-import "core:sys/linux"
 import "core:sys/posix"
 import wl "extern/wayland/server"
 import wlr "extern/wayland/wlroots"
@@ -12,7 +11,7 @@ SadeServer :: common.SadeServer
 main :: proc() {
 	sade: SadeServer
 	//init wlr logging
-	wlr.InitLogger(.Debug, nil)
+	wlr.InitLogger(.Info, nil)
 
 	sade.display = wl.CreateDisplay()
 	defer wl.DestroyDisplay(sade.display)
@@ -71,7 +70,7 @@ main :: proc() {
 	wl.InitList(&sade.keyboards)
 	sade.new_input.notify = events.handleNewInput
 	wl.AddSignal(&sade.backend.events.new_input, &sade.new_input)
-	sade.seat = wlr.CreateSeat(sade.display, "Sade")
+	sade.seat = wlr.CreateSeat(sade.display, "seat0")
 
 	socket := wl.AddDisplaySocketAuto(sade.display)
 	if len(socket) == 0 {
@@ -82,6 +81,10 @@ main :: proc() {
 		wl.DestroyDisplay(sade.display)
 	}
 	posix.setenv("WAYLAND_DISPLAY", socket, true)
+	if posix.fork() == 0 {
+		//run kitty
+		posix.execl("/bin/sh", "/bin/sh", "-c", "alacritty", nil)
+	}
 	wlr.Log(.Info, "Running wayland compositor on WAYLAND_DISPLAY %s", socket)
 	wl.RunDisplay(sade.display)
 }

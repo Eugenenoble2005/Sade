@@ -238,4 +238,14 @@ foreign wlroots {
 
 	@(link_name = "wlr_seat_keyboard_notify_modifiers")
 	SeatKeyboardNotifyModifiers :: proc(_: ^Seat, _: ^KeyboardModifiers) ---
+
+	@(link_name = "wlr_seat_keyboard_notify_key")
+	SeatKeyboardNotifyKey :: proc(_: ^Seat, _: c.uint32_t, _: c.uint32_t, _: c.uint32_t) ---
+
+	@(link_name = "wlr_seat_get_keyboard")
+	GetSeatKeyboard :: proc(_: ^Seat) -> ^Keyboard ---
+
+	@(link_name = "wlr_seat_keyboard_notify_enter")
+	SeatKeyboardNotifyEnter :: proc(_: ^Seat, _: ^Surface, _: []c.uint32_t, _: c.size_t, _: ^KeyboardModifiers) ---
+
 }

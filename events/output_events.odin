@@ -8,8 +8,10 @@ import "core:sys/linux"
 import "core:sys/posix"
 SadeServer :: common.SadeServer
 SadeOutput :: common.SadeOutput
+SadeToplevel :: common.SadeToplevel
 SadeKeyboard :: common.SadeKeyboard
 Calloc :: common.Calloc
+CFree :: common.CFree
 
 handleNewOutput :: proc(listener: ^wl.Listener, data: rawptr) {
 	OUTPUT := cast(^wlr.Output)data

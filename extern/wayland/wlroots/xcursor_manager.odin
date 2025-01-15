@@ -14,4 +14,6 @@ foreign wlroots {
 
 	@(link_name = "wlr_xcursor_manager_destroy")
 	DestroyXCursorManager :: proc(_: ^XCursorManager) ---
+
+
 }

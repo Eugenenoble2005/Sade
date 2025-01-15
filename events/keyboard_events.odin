@@ -3,8 +3,8 @@ import wl "../extern/wayland/server"
 import wlr "../extern/wayland/wlroots"
 import xkb "../extern/xkbcommon"
 import "core:fmt"
+import "core:sys/posix"
 ServerNewKeyboard :: proc(sade: ^SadeServer, device: ^wlr.InputDevice) {
-	fmt.println("We have located a keyboard")
 	KEYBOARD: ^wlr.Keyboard = wlr.GetKeyboardFromInputDevice(device)
 	sade_keyboard: ^SadeKeyboard = Calloc(SadeKeyboard)
 	sade_keyboard.server = sade
@@ -47,7 +47,6 @@ handleKeyboardKeyPress :: proc(listener: ^wl.Listener, data: rawptr) {
 
 	keycode := EVENT.keycode + 8
 	syms: [^]xkb.Keysym
-	syms_place: ^xkb.Keysym
 	nsyms: int = cast(int)xkb.GetSyms(sade_keyboard.keyboard.xkb_state, keycode, auto_cast &syms) //??
 	handled := false
 	modifiers := wlr.GetKeyboardModifiers(sade_keyboard.keyboard)
@@ -59,11 +58,26 @@ handleKeyboardKeyPress :: proc(listener: ^wl.Listener, data: rawptr) {
 			handled = handleKeybind(sade, syms[i])
 		}
 	}
+	//pass the key to the client if the compositor could not handle it
+	if !handled {
+		wlr.SetSeatKeyboard(SEAT, sade_keyboard.keyboard)
+		wlr.SeatKeyboardNotifyKey(SEAT, EVENT.time_msec, EVENT.keycode, auto_cast EVENT.state)
+	}
 
 }
 
 handleKeybind :: proc(sade: ^SadeServer, sym: xkb.Keysym) -> bool {
 	fmt.println(sym)
+	switch (sym) {
+	case xkb.KEY_F1:
+		//kill compositor
+		wl.TerminateDisplay(sade.display) //call better cleanup
+	case xkb.KEY_RETURN:
+		posix.execl("/bin/sh", "/bin/sh", "-c", "kitty", nil)
+	//will open kitty here to test out top levels
+	case:
+		return false
+	}
 	return true
 }
 handleKeyboardDestroy :: proc(listener: ^wl.Listener, data: rawptr) {}

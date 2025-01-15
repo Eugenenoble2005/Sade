@@ -110,4 +110,10 @@ foreign wlroots {
 
 	@(link_name = "wlr_scene_output_send_frame_done")
 	SendOutputFrameDone :: proc(_: ^SceneOutput, _: ^posix.timespec) ---
+
+	@(link_name = "wlr_scene_xdg_surface_create")
+	CreateXdgSurfaceScene :: proc(_: ^SceneTree, _: ^XdgSurface) -> ^SceneTree ---
+
+	@(link_name = "wlr_scene_node_raise_to_top")
+	RaiseSceneNodeToTop :: proc(_: ^SceneNode) ---
 }
