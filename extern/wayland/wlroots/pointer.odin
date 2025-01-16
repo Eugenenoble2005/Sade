@@ -24,7 +24,17 @@ Pointer :: struct {
 	},
 	data:        rawptr,
 }
-
+PointerMotionAbsoluteEvent :: struct {
+	pointer:   ^Pointer,
+	time_msec: c.uint32_t,
+	x, y:      c.double,
+}
+PointerButtonEvent :: struct {
+	pointer:   ^Pointer,
+	time_msec: c.uint32_t,
+	button:    c.uint32_t,
+	state:     wl.PointerButtonState,
+}
 PointerMotionEvent :: struct {
 	pointer:                ^Pointer,
 	time_msec:              c.uint32_t,

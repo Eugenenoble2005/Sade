@@ -2,6 +2,7 @@ package wlroots
 import "../../pixman"
 import wl "../server"
 import "core:c"
+import "core:sys/posix"
 OutputLayerState :: struct {
 	layer:    ^OutputLayer,
 	buffer:   ^Buffer,
@@ -24,3 +25,7 @@ OutputLayer :: struct {
 	},
 }
 
+OutputLayerFeedbackEvent :: struct {
+	target_device: posix.dev_t,
+	formats:       ^DRMFormatSet,
+}

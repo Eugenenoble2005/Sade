@@ -73,8 +73,6 @@ handleKeybind :: proc(sade: ^SadeServer, sym: xkb.Keysym) -> bool {
 		//kill compositor
 		wl.TerminateDisplay(sade.display) //call better cleanup
 	case xkb.KEY_RETURN:
-		posix.execl("/bin/sh", "/bin/sh", "-c", "kitty", nil)
-	//will open kitty here to test out top levels
 	case:
 		return false
 	}

@@ -248,4 +248,16 @@ foreign wlroots {
 	@(link_name = "wlr_seat_keyboard_notify_enter")
 	SeatKeyboardNotifyEnter :: proc(_: ^Seat, _: ^Surface, _: []c.uint32_t, _: c.size_t, _: ^KeyboardModifiers) ---
 
+	@(link_name = "wlr_seat_pointer_notify_enter")
+	SeatPointerNotifyEnter :: proc(_: ^Seat, _: ^Surface, _: c.double, _: c.double) ---
+
+	@(link_name = "wlr_seat_pointer_notify_motion")
+	SeatPointerNotifyMotion :: proc(_: ^Seat, _: c.uint32_t, _: c.double, _: c.double) ---
+
+	@(link_name = "wlr_seat_pointer_notify_button")
+	SeatPointerNotifyButton :: proc(_: ^Seat, _: c.uint32_t, _: c.uint32_t, _: wl.PointerButtonState) -> c.uint32_t ---
+
+	@(link_name = "wlr_seat_pointer_clear_focus")
+	ClearSeatPointerFocus :: proc(_: ^Seat) ---
+
 }

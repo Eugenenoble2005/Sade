@@ -67,6 +67,12 @@ main :: proc() {
 	sade.cursor_motion.notify = events.cursorMotion
 	wl.AddSignal(&sade.cursor.events.motion, &sade.cursor_motion)
 
+	sade.cursor_motion_absolute.notify = events.cursorMotionAbsolute
+	wl.AddSignal(&sade.cursor.events.motion_absolute, &sade.cursor_motion_absolute)
+
+	sade.cursor_button.notify = events.cursorButton
+	wl.AddSignal(&sade.cursor.events.button, &sade.cursor_button)
+
 	wl.InitList(&sade.keyboards)
 	sade.new_input.notify = events.handleNewInput
 	wl.AddSignal(&sade.backend.events.new_input, &sade.new_input)
@@ -81,10 +87,13 @@ main :: proc() {
 		wl.DestroyDisplay(sade.display)
 	}
 	posix.setenv("WAYLAND_DISPLAY", socket, true)
-	if posix.fork() == 0 {
-		//run kitty
-		posix.execl("/bin/sh", "/bin/sh", "-c", "alacritty", nil)
+	startup_arg: cstring = "foot"
+	if len(startup_arg) != 0 {
+		if posix.fork() == 0 {
+			posix.execl("/bin/sh", "/bin/sh", "-c", startup_arg, nil)
+		}
 	}
+
 	wlr.Log(.Info, "Running wayland compositor on WAYLAND_DISPLAY %s", socket)
 	wl.RunDisplay(sade.display)
 }

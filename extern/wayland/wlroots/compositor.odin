@@ -88,7 +88,7 @@ SurfaceRole :: struct {
 	no_object:     c.bool,
 	client_commit: proc(surface: ^Surface),
 	commit:        proc(surface: ^Surface),
-	map_:          proc(surface: ^Surface), ///must fix this
+	map_:          proc(surface: ^Surface),
 	unmap:         proc(surface: ^Surface),
 	destroy:       proc(surface: ^Surface),
 }

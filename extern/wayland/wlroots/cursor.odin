@@ -52,4 +52,7 @@ foreign wlroots {
 
 	@(link_name = "wlr_cursor_set_xcursor")
 	SetXcursor :: proc(_: ^Cursor, _: ^XCursorManager, _: cstring) ---
+
+	@(link_name = "wlr_cursor_warp_absolute")
+	WarpCursorAbsolute :: proc(_: ^Cursor, _: ^InputDevice, _: c.double, _: c.double) ---
 }
