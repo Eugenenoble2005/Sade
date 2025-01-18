@@ -10,6 +10,7 @@ SadeServer :: common.SadeServer
 SadeOutput :: common.SadeOutput
 SadeToplevel :: common.SadeToplevel
 SadeKeyboard :: common.SadeKeyboard
+SadeCursorMode :: common.SadeCursorMode
 Calloc :: common.Calloc
 CFree :: common.CFree
 

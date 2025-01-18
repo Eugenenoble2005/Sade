@@ -76,6 +76,8 @@ DestroyXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {
 	CFree(sade_toplevel)
 }
 RequestMoveXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {
+	sade_toplevel := container_of(listener, SadeToplevel, "request_move")
+	BeginInteractive(sade_toplevel, .Move, 0)
 	fmt.println("Client requested to be moved")
 }
 RequestResizeXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {}
@@ -138,4 +140,15 @@ DesktopTopLevelAt :: proc(
 		tree = tree.node.parent
 	}
 	return cast(^SadeToplevel)tree.node.data
+}
+
+BeginInteractive :: proc(sade_toplevel: ^SadeToplevel, mode: SadeCursorMode, edges: u32) {
+	sade := sade_toplevel.server
+	sade.grabbed_toplevel = sade_toplevel
+	sade.cursor_mode = mode
+
+	if mode == .Move {
+		sade.grab_x = auto_cast sade.cursor.x - auto_cast sade_toplevel.scene_tree.node.x
+		sade.grab_y = auto_cast sade.cursor.y - auto_cast sade_toplevel.scene_tree.node.y
+	}
 }

@@ -78,4 +78,13 @@ handleKeybind :: proc(sade: ^SadeServer, sym: xkb.Keysym) -> bool {
 	}
 	return true
 }
-handleKeyboardDestroy :: proc(listener: ^wl.Listener, data: rawptr) {}
+handleKeyboardDestroy :: proc(listener: ^wl.Listener, data: rawptr) {
+	KEYBOARD := container_of(listener, SadeKeyboard, "destroy")
+
+	wl.ListRemove(&KEYBOARD.modifiers.link)
+	wl.ListRemove(&KEYBOARD.key.link)
+	wl.ListRemove(&KEYBOARD.destroy.link)
+	wl.ListRemove(&KEYBOARD.link)
+
+	CFree(KEYBOARD)
+}
