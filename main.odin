@@ -73,10 +73,22 @@ main :: proc() {
 	sade.cursor_button.notify = events.cursorButton
 	wl.AddSignal(&sade.cursor.events.button, &sade.cursor_button)
 
+	sade.cursor_axis.notify = events.cursorAxis
+	wl.AddSignal(&sade.cursor.events.axis, &sade.cursor_axis)
+
+	sade.cursor_frame.notify = events.cursorFrame
+	wl.AddSignal(&sade.cursor.events.frame, &sade.cursor_frame)
+
 	wl.InitList(&sade.keyboards)
 	sade.new_input.notify = events.handleNewInput
 	wl.AddSignal(&sade.backend.events.new_input, &sade.new_input)
+
 	sade.seat = wlr.CreateSeat(sade.display, "seat0")
+	sade.request_cursor.notify = events.seatRequestCursor
+	wl.AddSignal(&sade.seat.events.request_set_cursor, &sade.request_cursor)
+
+	sade.request_set_selection.notify = events.seatRequestSetSelection
+	wl.AddSignal(&sade.seat.events.set_selection, &sade.request_set_selection)
 
 	socket := wl.AddDisplaySocketAuto(sade.display)
 	if len(socket) == 0 {

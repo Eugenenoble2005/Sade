@@ -30,6 +30,8 @@ SadeServer :: struct {
 	grab_x, grab_y:         f64,
 	cursor_mode:            SadeCursorMode,
 	grabbed_toplevel:       ^SadeToplevel,
+	request_cursor:         wl.Listener,
+	request_set_selection:  wl.Listener,
 }
 SadeToplevel :: struct {
 	link:               wl.List,

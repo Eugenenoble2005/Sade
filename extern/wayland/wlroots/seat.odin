@@ -226,6 +226,16 @@ SeatPointerButton :: struct {
 	button:    c.uint32_t,
 	n_pressed: c.size_t,
 }
+SeatPointerRequestSetCursorEvent :: struct {
+	seat_client:          ^SeatClient,
+	surface:              ^Surface,
+	serial:               c.uint32_t,
+	hotspot_x, hotspot_y: c.int32_t,
+}
+SeatRequestSetSelectionEvent :: struct {
+	source: ^DataSource,
+	serial: c.uint32_t,
+}
 foreign wlroots {
 	@(link_name = "wlr_seat_set_capabilities")
 	SetSeatCapabilities :: proc(_: ^Seat, _: c.uint32_t) ---
@@ -260,4 +270,12 @@ foreign wlroots {
 	@(link_name = "wlr_seat_pointer_clear_focus")
 	ClearSeatPointerFocus :: proc(_: ^Seat) ---
 
+	@(link_name = "wlr_seat_set_selection")
+	SetSeatSelection :: proc(_: ^Seat, _: ^DataSource, _: c.uint32_t) ---
+
+	@(link_name = "wlr_seat_pointer_notify_axis")
+	SeatPointerNotifyAxis :: proc(_: ^Seat, _: c.uint32_t, _: wl.PointerAxis, _: c.double, _: c.int32_t, _: wl.PointerAxisSource, _: wl.PointerAxisRelativeDirection) ---
+
+	@(link_name = "wlr_seat_pointer_notify_frame")
+	SeatPointerNotifyFrame :: proc(_: ^Seat) ---
 }

@@ -55,4 +55,7 @@ foreign wlroots {
 
 	@(link_name = "wlr_cursor_warp_absolute")
 	WarpCursorAbsolute :: proc(_: ^Cursor, _: ^InputDevice, _: c.double, _: c.double) ---
+
+	@(link_name = "wlr_cursor_set_surface")
+	SetCursorSurface :: proc(_: ^Cursor, _: ^Surface, _: c.int32_t, _: c.int32_t) ---
 }

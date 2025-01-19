@@ -70,3 +70,21 @@ cursorButton :: proc(listener: ^wl.Listener, data: rawptr) {
 		}
 	}
 }
+cursorAxis :: proc(listener: ^wl.Listener, data: rawptr) {
+	sade := container_of(listener, SadeServer, "cursor_axis")
+	EVENT := cast(^wlr.PointerAxisEvent)data
+	wlr.SeatPointerNotifyAxis(
+		sade.seat,
+		EVENT.time_msec,
+		EVENT.orientaion,
+		EVENT.delta,
+		EVENT.delta_discrete,
+		EVENT.source,
+		EVENT.relative_direction,
+	)
+}
+
+cursorFrame :: proc(listener: ^wl.Listener, data: rawptr) {
+	sade := container_of(listener, SadeServer, "cursor_frame")
+	wlr.SeatPointerNotifyFrame(sade.seat)
+}

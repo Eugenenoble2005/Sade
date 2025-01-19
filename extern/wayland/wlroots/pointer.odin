@@ -35,6 +35,15 @@ PointerButtonEvent :: struct {
 	button:    c.uint32_t,
 	state:     wl.PointerButtonState,
 }
+PointerAxisEvent :: struct {
+	pointer:            ^Pointer,
+	time_msec:          c.uint32_t,
+	source:             wl.PointerAxisSource,
+	orientaion:         wl.PointerAxis,
+	relative_direction: wl.PointerAxisRelativeDirection,
+	delta:              c.double,
+	delta_discrete:     c.int32_t,
+}
 PointerMotionEvent :: struct {
 	pointer:                ^Pointer,
 	time_msec:              c.uint32_t,
