@@ -11,6 +11,7 @@ SadeOutput :: common.SadeOutput
 SadeToplevel :: common.SadeToplevel
 SadeKeyboard :: common.SadeKeyboard
 SadeCursorMode :: common.SadeCursorMode
+SadePopup :: common.SadePopup
 Calloc :: common.Calloc
 CFree :: common.CFree
 

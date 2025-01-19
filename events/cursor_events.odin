@@ -33,7 +33,7 @@ ProcessCursorMotion :: proc(sade: ^SadeServer, time: u32) {
 		wlr.SetSceneNodePosition(
 			&sade_toplevel.scene_tree.node,
 			auto_cast sade.cursor.x - auto_cast sade.grab_x,
-			auto_cast sade.cursor.y - auto_cast sade.grab_y, //auto cast int to float
+			auto_cast sade.cursor.y - auto_cast sade.grab_y, //auto cast int to float, probably not the best way to do this
 		)
 	} else if sade.cursor_mode == .Resize {
 		return

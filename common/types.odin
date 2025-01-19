@@ -68,6 +68,11 @@ SadeCursorMode :: enum {
 	Move,
 	Resize,
 }
+SadePopup :: struct {
+	popup:   ^wlr.XdgPopup,
+	commit:  wl.Listener,
+	destroy: wl.Listener,
+}
 Calloc :: proc($T: typeid) -> ^T {
 	//wlroots makes me do this
 	return cast(^T)libc.calloc(1, size_of(T))

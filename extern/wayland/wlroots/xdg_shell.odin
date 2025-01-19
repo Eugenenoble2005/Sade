@@ -178,6 +178,12 @@ foreign wlroots {
 	@(link_name = "wlr_xdg_toplevel_try_from_wlr_surface")
 	TryGetXdgToplevelFromSurface :: proc(_: ^Surface) -> ^XdgToplevel ---
 
+	@(link_name = "wlr_xdg_surface_try_from_wlr_surface")
+	TryGetXdgSurfaceFromSurface :: proc(_: ^Surface) -> ^XdgSurface ---
+
 	@(link_name = "wlr_xdg_toplevel_set_activated")
 	SetActivatedXdgToplevel :: proc(_: ^XdgToplevel, _: c.bool) -> c.uint32_t ---
+
+	@(link_name = "wlr_xdg_surface_schedule_configure")
+	ScheduleXdgSurfaceConfiguration :: proc(_: ^XdgSurface) -> c.uint32_t ---
 }

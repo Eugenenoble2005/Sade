@@ -86,7 +86,23 @@ RequestFullscreenXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {}
 RequestMaximizeXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {}
 
 
-newXdgPopup :: proc(listener: ^wl.Listener, data: rawptr) {}
+newXdgPopup :: proc(listener: ^wl.Listener, data: rawptr) {
+	POPUP := cast(^wlr.XdgPopup)data
+	sade_popup := Calloc(SadePopup)
+	sade_popup.popup = POPUP
+
+	parent := wlr.TryGetXdgSurfaceFromSurface(POPUP.parent)
+	assert(parent != nil)
+
+	parent_tree := parent.data
+	POPUP.base.data = wlr.CreateXdgSurfaceScene(cast(^wlr.SceneTree)parent_tree, POPUP.base)
+
+	sade_popup.commit.notify = XdgPopupCommit
+	wl.AddSignal(&POPUP.base.surface.events.commit, &sade_popup.commit)
+
+	sade_popup.destroy.notify = XdgPopupDestroy
+	wl.AddSignal(&POPUP.base.surface.events.destroy, &sade_popup.destroy)
+}
 
 FocusToplevel :: proc(sade_toplevel: ^SadeToplevel) {
 	if sade_toplevel == nil do return
@@ -151,4 +167,18 @@ BeginInteractive :: proc(sade_toplevel: ^SadeToplevel, mode: SadeCursorMode, edg
 		sade.grab_x = auto_cast sade.cursor.x - auto_cast sade_toplevel.scene_tree.node.x
 		sade.grab_y = auto_cast sade.cursor.y - auto_cast sade_toplevel.scene_tree.node.y
 	}
+}
+XdgPopupCommit :: proc(listener: ^wl.Listener, data: rawptr) {
+	sade_popup := container_of(listener, SadePopup, "commit")
+	if sade_popup.popup.base.initial_commit {
+		wlr.ScheduleXdgSurfaceConfiguration(sade_popup.popup.base)
+	}
+}
+
+XdgPopupDestroy :: proc(listener: ^wl.Listener, data: rawptr) {
+	sade_popup := container_of(listener, SadePopup, "destroy")
+	wl.ListRemove(&sade_popup.commit.link)
+	wl.ListRemove(&sade_popup.destroy.link)
+
+	CFree(sade_popup)
 }
