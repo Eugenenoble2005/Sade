@@ -168,6 +168,12 @@ XdgToplevelRequested :: struct {
 		fullscreen_output_destroy: wl.Listener,
 	},
 }
+XdgToplevelResizeEvent :: struct {
+	toplevel: ^XdgToplevel,
+	seat:     ^Seat,
+	serial:   c.uint32_t,
+	edges:    c.uint32_t,
+}
 foreign wlroots {
 	@(link_name = "wlr_xdg_shell_create")
 	CreateXdgShell :: proc(_: ^wl.Display, _: c.uint32_t) -> ^XdgShell ---

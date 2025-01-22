@@ -1,6 +1,7 @@
 package events
 import wl "../extern/wayland/server"
 import wlr "../extern/wayland/wlroots"
+import "core:c"
 import "core:fmt"
 //if anything breaks, check this proc
 newXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {
@@ -80,7 +81,11 @@ RequestMoveXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {
 	BeginInteractive(sade_toplevel, .Move, 0)
 	fmt.println("Client requested to be moved")
 }
-RequestResizeXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {}
+RequestResizeXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {
+	EVENT := cast(^wlr.XdgToplevelResizeEvent)data
+	sade_toplevel := container_of(listener, SadeToplevel, "request_resize")
+	BeginInteractive(sade_toplevel, .Resize, EVENT.edges)
+}
 RequestMaximizeXdgPopup :: proc(listener: ^wl.Listener, data: rawptr) {}
 RequestFullscreenXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {}
 RequestMaximizeXdgToplevel :: proc(listener: ^wl.Listener, data: rawptr) {}
@@ -164,9 +169,30 @@ BeginInteractive :: proc(sade_toplevel: ^SadeToplevel, mode: SadeCursorMode, edg
 	sade.cursor_mode = mode
 
 	if mode == .Move {
-		sade.grab_x = auto_cast sade.cursor.x - auto_cast sade_toplevel.scene_tree.node.x
-		sade.grab_y = auto_cast sade.cursor.y - auto_cast sade_toplevel.scene_tree.node.y
+		sade.grab_x = sade.cursor.x - cast(f64)sade_toplevel.scene_tree.node.x
+		sade.grab_y = sade.cursor.y - cast(f64)sade_toplevel.scene_tree.node.y
+	} else if mode == .Resize {
+		geo_box: ^wlr.Box = &sade_toplevel.toplevel.base.geometry
+		border_x: f64 =
+			cast(f64)(sade_toplevel.scene_tree.node.x + geo_box.x) +
+			cast(f64)((edges & cast(u32)wlr.Edges.Right != 0) ? geo_box.width : 0)
+
+		border_y: f64 =
+			cast(f64)(sade_toplevel.scene_tree.node.y + geo_box.y) +
+			cast(f64)((edges & cast(u32)wlr.Edges.Bottom != 0) ? geo_box.height : 0)
+
+		sade.grab_x = sade.cursor.x - cast(f64)border_x
+		sade.grab_y = sade.cursor.y - cast(f64)border_y
+
+		sade.grab_geobox = geo_box^
+		sade.grab_geobox.x += sade_toplevel.scene_tree.node.x
+		sade.grab_geobox.y += sade_toplevel.scene_tree.node.y
+
+		fmt.println(sade.grab_geobox.x)
+		fmt.println(sade.grab_geobox.y)
+		sade.resize_edges = edges
 	}
+
 }
 XdgPopupCommit :: proc(listener: ^wl.Listener, data: rawptr) {
 	sade_popup := container_of(listener, SadePopup, "commit")

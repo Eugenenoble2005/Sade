@@ -121,8 +121,8 @@ foreign wayland {
 	@(link_name = "wl_list_insert")
 	ListInsert :: proc(_: ^List, _: ^List) ---
 
-	@(link_name = "wl_list_empty")
-	IsListEmpty :: proc(_: ^List) -> c.int ---
+	@(link_name = "wl_list_empty", private)
+	wl_list_empty :: proc(_: ^List) -> c.int ---
 
 	@(link_name = "wl_list_remove")
 	ListRemove :: proc(_: ^List) ---
@@ -137,3 +137,5 @@ foreign wayland {
 AddSignal :: proc(signal: ^Signal, listener: ^Listener) {
 	ListInsert(signal.listener_list.prev, &listener.link)
 }
+
+IsListEmpty :: proc(list: ^List) -> bool {return wl_list_empty(list) == 1}

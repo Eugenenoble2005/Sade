@@ -32,6 +32,8 @@ SadeServer :: struct {
 	grabbed_toplevel:       ^SadeToplevel,
 	request_cursor:         wl.Listener,
 	request_set_selection:  wl.Listener,
+	grab_geobox:            wlr.Box,
+	resize_edges:           u32,
 }
 SadeToplevel :: struct {
 	link:               wl.List,

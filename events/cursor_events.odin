@@ -36,7 +36,7 @@ ProcessCursorMotion :: proc(sade: ^SadeServer, time: u32) {
 			auto_cast sade.cursor.y - auto_cast sade.grab_y, //auto cast int to float, probably not the best way to do this
 		)
 	} else if sade.cursor_mode == .Resize {
-		return
+		ProcessCursorResize(sade)
 	}
 	if sade.cursor_mode != .Passthrough do return
 	sx, sy: f64
@@ -52,6 +52,49 @@ ProcessCursorMotion :: proc(sade: ^SadeServer, time: u32) {
 	} else {
 		wlr.ClearSeatPointerFocus(SEAT)
 	}
+}
+ProcessCursorResize :: proc(sade: ^SadeServer) {
+	sade_toplevel := sade.grabbed_toplevel
+	border_x: f64 = sade.cursor.x - sade.grab_x
+	border_y: f64 = sade.cursor.y - sade.grab_y
+	new_left: i32 = sade.grab_geobox.x
+	new_right: i32 = sade.grab_geobox.x + sade.grab_geobox.width
+
+	new_top: i32 = sade.grab_geobox.y
+	new_bottom: i32 = sade.grab_geobox.y + sade.grab_geobox.height
+
+	if sade.resize_edges & auto_cast wlr.Edges.Top != 0 {
+		new_top = auto_cast border_y
+		if new_top >= new_bottom {
+			new_top = new_bottom - 1
+		}
+	} else if sade.resize_edges & auto_cast wlr.Edges.Bottom != 0 {
+		new_bottom = auto_cast border_y
+		if new_bottom <= new_top {
+			new_bottom = new_top + 1
+		}
+	}
+	if sade.resize_edges & auto_cast wlr.Edges.Left != 0 {
+		new_left = auto_cast border_x
+		if new_left >= new_right {
+			new_left = new_right - 1
+		}
+	} else if sade.resize_edges & auto_cast wlr.Edges.Right != 0 {
+		new_right = auto_cast border_x
+		if new_right <= new_left {
+			new_right = new_left + 1
+		}
+	}
+	geo_box: ^wlr.Box = &sade_toplevel.toplevel.base.geometry
+	wlr.SetSceneNodePosition(
+		&sade_toplevel.scene_tree.node,
+		new_left - geo_box.x,
+		new_top - geo_box.y,
+	)
+	new_width: i32 = new_right - new_left
+	new_height: i32 = new_bottom - new_top
+	wlr.SetXdgToplevelSize(sade_toplevel.toplevel, new_width, new_height)
+
 }
 
 cursorButton :: proc(listener: ^wl.Listener, data: rawptr) {

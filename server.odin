@@ -7,11 +7,11 @@ import "core:sys/posix"
 import wl "extern/wayland/server"
 import wlr "extern/wayland/wlroots"
 
-/**
-Initialize server and events, just standard wayland stuff
-**/
 InitServer :: proc() {
 	sade: SadeServer
+	//init wlr logging
+	wlr.InitLogger(.Info, nil)
+
 	sade.display = wl.CreateDisplay()
 	defer wl.DestroyDisplay(sade.display)
 

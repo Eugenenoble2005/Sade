@@ -46,6 +46,7 @@ Keyboard :: struct {
 	events:        struct {
 		key:         wl.Signal,
 		modifiers:   wl.Signal,
+		keymap:      wl.Signal,
 		repeat_info: wl.Signal,
 	},
 	data:          rawptr,
